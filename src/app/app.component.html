@@ -1,0 +1,93 @@
+<div class="calc-shell"
+  [class.theme-dark]="theme === 'dark'"
+  [class.theme-light]="theme === 'light'">
+  <div class="calc"   [class.closing]="isClosing"
+  [class.history-open]="showHistory">
+    <!-- Display -->
+    <div class="calc-display">{{ display }}</div>
+
+    <!-- Toolbar with theme + history toggle -->
+    <div class="toolbar">
+
+    <!-- Theme Toggle Pill -->
+    <div class="theme-toggle-pill" (click)="toggleTheme()">
+      <div class="toggle-track">
+        <div class="toggle-thumb"></div>
+      </div>
+    </div>
+
+      <button
+        class="history-toggle"
+        (click)="toggleHistory()"
+        [attr.aria-expanded]="showHistory"
+        [attr.aria-controls]="'history-drawer'"
+      >
+        {{ showHistory ? 'Hide History' : 'Show History' }}
+      </button>
+    </div>
+
+    <!-- Keypad -->
+    <div class="calc-row">
+      <button (click)="clearAll()">AC</button>
+      <button (click)="toggleSign()">±</button>
+      <button (click)="percent()">%</button>
+      <button class="op" (click)="pressOperator('÷')">÷</button>
+    </div>
+
+    <div class="calc-row">
+      <button (click)="pressDigit('7')">7</button>
+      <button (click)="pressDigit('8')">8</button>
+      <button (click)="pressDigit('9')">9</button>
+      <button class="op" (click)="pressOperator('×')">×</button>
+    </div>
+
+    <div class="calc-row">
+      <button (click)="pressDigit('4')">4</button>
+      <button (click)="pressDigit('5')">5</button>
+      <button (click)="pressDigit('6')">6</button>
+      <button class="op" (click)="pressOperator('-')">−</button>
+    </div>
+
+    <div class="calc-row">
+      <button (click)="pressDigit('1')">1</button>
+      <button (click)="pressDigit('2')">2</button>
+      <button (click)="pressDigit('3')">3</button>
+      <button class="op" (click)="pressOperator('+')">+</button>
+    </div>
+
+    <div class="calc-row">
+      <button class="zero" (click)="pressDigit('0')">0</button>
+      <button class="period" (click)="pressDecimal()">.</button>
+      <button class="equals" (click)="pressEquals()">=</button>
+    </div>
+
+    <!-- Right-side slide-out (sits outside to the right, not overlapping keypad) -->
+    <div
+      id="history-drawer"
+      class="history-drawer"
+      [class.open]="showHistory"
+      role="region"
+      aria-label="Calculation history"
+    >
+      <div class="history-panel">
+        <div class="history-header">
+          <span>History</span>
+          <div class="history-actions">
+            <button class="ghost" (click)="clearHistory()">Clear</button>
+            <button class="ghost" (click)="toggleHistory()">Close</button>
+          </div>
+        </div>
+
+        <div class="history-list" *ngIf="history.length; else emptyState">
+          <div class="history-item" *ngFor="let entry of history">
+            {{ entry }}
+          </div>
+        </div>
+
+        <ng-template #emptyState>
+          <div class="history-empty">No history yet</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

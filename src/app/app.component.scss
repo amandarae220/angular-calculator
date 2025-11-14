@@ -1,0 +1,477 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  font-family: 'Nunito', system-ui, -apple-system, sans-serif;
+  --drawer-w: 260px;
+  --blend-w: 10px;
+}
+
+/* defaults, overridden in theme classes */
+.calc-shell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+
+  --app-bg: radial-gradient(circle at top, #2c3e50, #0b0c10);
+  --calc-bg: #151924;
+  --display-bg: #050608;
+  --display-text: #e9f0ff;
+  --text-primary: #f7f9fc;
+  --text-muted: #b5bdd4;
+  --button-bg: #252a3a;
+  --button-text: #f5f7ff;
+  --button-op-bg: #ff9f0a;
+  --button-op-text: #101010;
+  --button-eq-bg: #34c759;
+  --button-eq-text: #101010;
+  --toolbar-border: rgba(181, 189, 212, 0.35);
+  --toolbar-border-hover: rgba(181, 189, 212, 0.6);
+  --history-bg: rgba(18, 22, 33, 0.96);
+  --history-chip-bg: rgba(255, 255, 255, 0.04);
+  --history-empty: #8b93a7;
+
+  background: var(--app-bg);
+}
+
+/* Fun VSCode-style dark mode */
+.calc-shell.theme-dark {
+  --app-bg: radial-gradient(circle at top, #2c3e50, #0b0c10);
+  --calc-bg: #151924;
+  --display-bg: #050608;
+  --display-text: #e9f0ff;
+  --text-primary: #f7f9fc;
+  --text-muted: #b5bdd4;
+  --button-bg: #252a3a;
+  --button-text: #f5f7ff;
+  --button-op-bg: #ff9f0a; /* bright orange */
+  --button-op-text: #101010;
+  --button-eq-bg: #34c759; /* Apple green */
+  --button-eq-text: #101010;
+  --toolbar-border: rgba(181, 189, 212, 0.35);
+  --toolbar-border-hover: rgba(181, 189, 212, 0.6);
+  --history-bg: rgba(18, 22, 33, 0.96);
+  --history-chip-bg: rgba(255, 255, 255, 0.04);
+  --history-empty: #8b93a7;
+  --button-shadow-default: #141722;
+  --button-shadow-op:      #d88000;
+  --button-shadow-eq:      #1f9f44;
+}
+
+/* Light / pastel mode */
+.calc-shell.theme-light {
+  --app-bg: radial-gradient(circle at top, #ffffff, #f7faff);
+  --calc-bg: #FDFDFC;
+  --display-bg: #F3F4F7;
+  --display-text: #2A2E3A;
+  --text-primary: #303445;
+  --text-muted: #767C91;
+
+  /* Pastel palette */
+  --button-text: #303445;
+
+  /* Button rows (pastel keys like your sample image) */
+  --mint:  #D9F3EE;
+  --blue:  #E3EFF9;
+  --pink:  #F7E6EB;
+  --peach: #F9E8D6;
+
+  /* Operators / special keys */
+  --button-op-bg:  #FFE1BB;
+  --button-op-text: #4F3A19;
+
+  --button-eq-bg: #e8def3;
+  --button-eq-text: #183525;
+
+  /* AC only */
+  --button-ac-bg: #FFEAB0;
+  --button-ac-text: #4F3A19;
+
+  /* History panel */
+  --history-bg: #F6F7FB;
+  --history-chip-bg: #ECEEFA;
+  --history-empty: #9AA0B8;
+
+  --toolbar-border: rgba(160, 165, 190, 0.5);
+  --toolbar-border-hover: rgba(100, 105, 140, 0.8);
+
+    --button-shadow-default: #d0d2e3;   /* generic soft grey for light buttons */
+  --button-shadow-mint:    #b3d9cf;
+  --button-shadow-blue:    #b8cee8;
+  --button-shadow-pink:    #e3bcc9;
+  --button-shadow-peach:   #e7c6a7;
+  --button-shadow-op:      #e3b989;
+  --button-shadow-eq:      #c2a9e0;
+  --button-shadow-ac:      #e4c982;
+}
+
+
+.calc {
+  width: 320px;
+  background: var(--calc-bg);
+  border-radius: 1.5rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: visible;
+  z-index: 2;
+  color: var(--text-primary);
+}
+
+.calc.closing {
+  overflow: hidden;  
+}
+
+.calc.closing::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; right: -1px;
+  width: 12px;
+  background: var(--calc-bg);
+  pointer-events: none;
+}
+
+.calc-display {
+  background: var(--display-bg);
+  color: var(--display-text);
+  padding: 1rem;
+  border-radius: 1rem;
+  text-align: right;
+  font-size: 2.4rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  letter-spacing: 0.1em; 
+  letter-spacing: 0.02em;
+}
+
+/* Toolbar under display */
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -0.25rem;
+  gap: 0.5rem;
+}
+
+.theme-toggle {
+  border: none;
+  background: transparent;
+  padding: 0.25rem 0.4rem;
+  border-radius: 999px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  line-height: 1;
+}
+
+
+.history-toggle {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px dashed var(--toolbar-border);
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.05s ease;
+}
+
+.history-toggle:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--toolbar-border-hover);
+}
+
+.history-toggle:active { transform: translateY(1px); }
+
+.calc-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+
+/* Row coloring for kawaii pastel effect */
+/* Row coloring for kawaii pastel effect – LIGHT MODE ONLY */
+.calc-shell.theme-light .calc-row:nth-child(3) button {
+  background: var(--mint);
+  --button-shadow: var(--button-shadow-mint);
+}
+.calc-shell.theme-light .calc-row:nth-child(4) button {
+  background: var(--blue);
+  --button-shadow: var(--button-shadow-blue);
+}
+.calc-shell.theme-light .calc-row:nth-child(5) button {
+  background: var(--pink);
+  --button-shadow: var(--button-shadow-pink);
+}
+.calc-shell.theme-light .calc-row:nth-child(6) button {
+  background: var(--peach);
+  --button-shadow: var(--button-shadow-peach);
+}
+
+/* AC button – light mode pastel */
+.calc-shell.theme-light .calc-row:nth-child(2) button:first-child {
+  background: var(--button-ac-bg);
+  color: var(--button-ac-text);
+  --button-shadow: var(--button-shadow-ac);
+}
+
+
+
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--button-bg);
+  color: var(--button-text);
+
+  /* pick the shadow color:
+     - row / button can set --button-shadow
+     - otherwise use theme’s --button-shadow-default
+     - final fallback is a neutral shadow */
+  --button-shadow-color: var(
+    --button-shadow,
+    var(--button-shadow-default, rgba(0, 0, 0, 0.35))
+  );
+
+  /* subtle outline + glow + drop shadow */
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 4px 0 var(--button-shadow-color),
+    0 10px 10px rgba(0, 0, 0, 0.1);
+
+  transform: translateY(0) scale(1);
+  transition:
+    transform 120ms cubic-bezier(.28, .84, .42, 1),
+    box-shadow 120ms cubic-bezier(.28, .84, .42, 1),
+    background 160ms ease-out;
+}
+
+/* Operators – use theme vars in BOTH light and dark */
+button.op {
+  background: var(--button-op-bg);
+  color: var(--button-op-text);
+  --button-shadow: var(--button-shadow-op, var(--button-shadow-default));
+}
+
+/* Equals – use theme vars in BOTH light and dark */
+button.equals {
+  background: var(--button-eq-bg);
+  color: var(--button-eq-text);
+  --button-shadow: var(--button-shadow-eq, var(--button-shadow-default));
+}
+
+/* Bottom row: 0 and . styled like equals in BOTH themes */
+button.zero,
+button.period {
+  background: var(--button-eq-bg);
+  color: var(--button-eq-text);
+  --button-shadow: var(--button-shadow-eq, var(--button-shadow-default));
+}
+
+
+button:active {
+  transform: translateY(2px) scale(0.97);
+  box-shadow:
+    0 0 0 0 rgba(0, 0, 0, 0),
+    0 2px 0 var(--button-shadow-color),
+    0 6px 10px rgba(0, 0, 0, 0.25);
+}
+
+button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+button.zero {
+  grid-column: span 2;
+  text-align: left;
+  padding-left: 1.5rem;
+}
+
+
+/* ───────────────────────────────
+   Right-side slide-out drawer
+   ─────────────────────────────── */
+.history-drawer {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(100% - var(--drawer-w, 260px));
+  width: var(--drawer-w, 260px);
+  transform: translate3d(0,0,0);
+  clip-path: inset(0 var(--drawer-w,260px) 0 0);
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform, opacity;
+  transition:
+    transform 220ms cubic-bezier(.2,.8,.2,1),
+    opacity   180ms ease,
+    z-index   0s linear 220ms;
+      border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  overflow: hidden;
+  background: var(--history-bg);
+}
+
+.history-drawer.open {
+  transform: translate3d(var(--drawer-w, 260px), 0, 0);
+  pointer-events: auto;
+  z-index: 3;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 220ms ease;
+}
+
+.history-panel {
+  position: relative;
+  height: 100%;
+  background: var(--history-bg);
+  border-top-right-radius: 1.25rem;
+  border-bottom-right-radius: 1.25rem;
+  box-shadow: 18px 0 40px rgba(0,0,0,.45);
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+}
+
+.history-panel::before {
+  left: calc(-1 * var(--blend-w, 10px));
+  width: var(--blend-w, 10px);
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 0.25rem 0.25rem 0.5rem;
+}
+
+.history-actions { display: flex; gap: 0.5rem; }
+button.ghost {
+  background: transparent;
+  color: var(--text-muted); 
+  border: 1px solid rgba(181,189,212,0.25);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+  border-radius: 0.65rem;
+  cursor: pointer;
+}
+button.ghost:hover { border-color: rgba(181,189,212,0.5); }
+
+.history-list {
+  overflow-y: auto;
+  padding: 0.25rem;
+  gap: 0.35rem;
+  display: flex;
+  flex-direction: column;
+}
+.history-item {
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background: var(--history-chip-bg);
+  border-radius: 0.6rem;
+  padding: 0.45rem 0.6rem;
+  line-height: 1.35;
+}
+.history-empty {
+  color: var(--history-empty);
+  text-align: center;
+  padding: 1rem 0.5rem;
+}
+
+/* Mobile fallback (optional): bottom drawer */
+@media (max-width: 420px) {
+  :root { --drawer-w: 100vw; }
+  .history-drawer {
+    left: 0;
+    right: 0;
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    transform: translateY(100%);
+  }
+  .history-drawer.open { transform: translateY(0); }
+  .history-panel {
+    border-radius: 1.25rem 1.25rem 0 0;
+    box-shadow: 0 -18px 40px rgba(0,0,0,.5);
+  }
+}
+
+.calc.history-open {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.calc.history-open .history-panel {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.theme-toggle-pill {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem;
+}
+
+.toggle-track {
+  width: 48px;
+  height: 26px;
+  background: var(--toggle-track-bg, #d1d5db);
+  border-radius: 999px;
+  position: relative;
+  transition: background 0.25s ease;
+}
+
+.toggle-thumb {
+  width: 22px;
+  height: 22px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  transition:
+    transform 0.25s cubic-bezier(.34,1.56,.64,1), 
+    background 0.25s ease;
+}
+
+/* Dark mode ON → thumb slides right */
+.calc-shell.theme-dark .toggle-thumb {
+  transform: translateX(22px);
+}
+
+/* Light mode ON → thumb stays left */
+
+/* Track colors */
+.calc-shell.theme-light {
+  --toggle-track-bg: #dcdff4; /* pastel lavender */
+}
+
+.calc-shell.theme-dark {
+  --toggle-track-bg: #4b5563; /* cool gray */
+}
+
+/* Optional: thumb color themes */
+.calc-shell.theme-light .toggle-thumb {
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(50,50,93,.15);
+}
+
+.calc-shell.theme-dark .toggle-thumb {
+  background: #facc15; /* cute little yellow = moon glow */
+  box-shadow: 0 2px 4px rgba(0,0,0,.35);
+}
+
