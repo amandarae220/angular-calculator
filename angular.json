@@ -71,6 +71,12 @@
           },
           "defaultConfiguration": "development"
         },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "/angular-calculator/"
+          }
+        },
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n"
         },
